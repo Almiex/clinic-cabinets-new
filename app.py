@@ -1012,13 +1012,21 @@ def main():
 
                 # FIX #2: добавлен key, чтобы Streamlit корректно отслеживал
                 # состояние виджета между reruns при выборе новой даты
-                selected_date = st.selectbox(
+                available_dates = [
+                    datetime.strptime(d, "%d.%m.%Y").date()
+                    for d in all_dates_full
+                ]
+        
+                selected_calendar = st.date_input(
                     "Дата:",
-                    all_dates_full,
-                    index=st.session_state.hourly_date_index,
-                    key="hourly_date_selectbox",
+                    value=available_dates[st.session_state.hourly_date_index],
+                    min_value=available_dates[0],
+                    max_value=available_dates[-1],
+                    format="DD.MM.YYYY",
+                    key="hourly_calendar",
                 )
-    
+
+                selected_date = selected_calendar.strftime("%d.%m.%Y")
                 st.session_state.hourly_date_index = all_dates_full.index(selected_date)
         
                 selected_dates = []
